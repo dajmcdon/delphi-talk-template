@@ -1,80 +1,20 @@
 ---
-format: 
-  revealjs:
-    footer: "Title --- [cmu-delphi.github.io/repo-name]{.smaller}"
-    logo: "gfx/delphi.jpg"
-    embed-resources: true
-    width: 1280
-    height: 720
-    theme: [default, themer.scss]
-    fig-format: svg
-execute: 
-  cache: true
-editor: source
+talk-title: "Title"
+talk-short-title: "{{< meta talk-title >}}"
+talk-subtitle: "Subtitle"
+author: "Daniel J. McDonald"
+other-authors: ""
+repo-address: "dajmcdon/myspecial-talk"
+talk-date: "Venue -- dd Somemonth yyyy"
+format: revealjs
 ---
 
-```{r}
-#| fig-align: center
-#| fig-format: svg
-primary <- "#a8201a"
-secondary <- "#f9c80e"
-tertiary <- "#2a76dd"
-fourth_colour <- "#311847"
-library(epiprocess)
-suppressMessages(library(tidyverse))
-x <- archive_cases_dv_subset
-x_latest <- epix_as_of(x, max_version = max(x$DT$version))
-self_max = max(x$DT$version)
-versions = seq(as.Date("2020-06-01"), self_max - 1, by = "1 month")
-snapshots_all <- map_dfr(versions, function(v) { 
-  epix_as_of(x, max_version = v) %>% mutate(version = v)}) %>%
-  bind_rows(x_latest %>% mutate(version = self_max)) %>%
-  mutate(latest = version == self_max)
-snapshots <- snapshots_all %>% 
-  filter(geo_value %in% c("ca", "fl"))
-```
+<!-- Set any of the above to "" to omit them -->
 
-```{r}
-#| include: false
-#| label: cover-art
-ggplot(snapshots_all %>% 
-         arrange(geo_value, version, time_value) %>% 
-         filter(!latest),
-       aes(x = time_value, y = percent_cli)) +  
-  geom_line(aes(color = factor(version), group = interaction(geo_value, version))) + 
-  #geom_vline(aes(color = factor(version), xintercept = version), lty = 3, 
-  #           size = 0.5) +
-  scale_x_date(minor_breaks = "month", labels = NULL) +
-  labs(x = "", y = "") + 
-  theme_void() +
-  coord_cartesian(xlim = as.Date(c("2020-10-01", NA)), ylim = c(-5, NA)) +
-  scale_color_viridis_d(option = "B", end = .8) +
-  theme(legend.position = "none", panel.background = element_blank()) +
-  geom_line(
-    data = snapshots %>% filter(latest),
-    aes(x = time_value, y = percent_cli, group = geo_value), 
-    inherit.aes = FALSE, color = "black")
-```
+<!-- Or adjust the formatting in _titleslide.qmd -->
+{{< include _titleslide.qmd >}}
 
 
-
-:::: {.columns}
-::: {.column width="20%"}
-
-:::
-::: {.column width="80%"}
-## Title {background-image="index_files/figure-revealjs/cover-art-1.svg" background-position="bottom"}
-
-### Subtitle
-
-<br>
-
-#### Authors
-#### and CMU's Delphi Group
-
-Talk Venue --- Date
-:::
-::::
 
 ## Slides begin
 
